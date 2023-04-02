@@ -1,0 +1,123 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.BorderLayout;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.awt.event.ActionEvent;
+
+public class Crime_Details {
+
+private JFrame frame;
+private JTextField t3;
+private JTable table;
+
+/**
+* Launch the application.
+*/
+public static void main(String[] args) {
+EventQueue.invokeLater(new Runnable() {
+public void run() {
+try {
+Crime_Details window = new Crime_Details();
+window.frame.setVisible(true);
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+});
+}
+
+/**
+* Create the application.
+*/
+public Crime_Details() {
+initialize();
+}
+
+/**
+* Initialize the contents of the frame.
+*/
+private void initialize() {
+frame = new JFrame();
+frame.setBounds(100, 100, 450, 277);
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+frame.getContentPane().setLayout(null);
+
+JLabel l3 = new JLabel("Enter Location");
+l3.setBounds(10, 11, 169, 25);
+l3.setFont(new Font("Tahoma", Font.BOLD, 20));
+frame.getContentPane().add(l3);
+
+t3 = new JTextField();
+t3.setBounds(189, 11, 216, 25);
+frame.getContentPane().add(t3);
+t3.setColumns(10);
+
+JButton b2 = new JButton("Submit");
+b2.addActionListener(new ActionListener() {
+public void actionPerformed(ActionEvent e) {
+String enterLocation=t3.getText();
+String crime_name = " ";
+int  rate = 0;
+try
+{
+Class.forName("com.mysql.cj.jdbc.Driver");
+Connection con=DriverManager.getConnection("jdbc:mysql://localHost:3306/crimerate","root","root");
+PreparedStatement pst=con.prepareStatement("select * from enterLocation");
+pst.setString(1,enterLocation);
+ResultSet rs=pst.executeQuery();
+int i =0;
+if(rs.next())
+{
+crime_name = rs.getString("crime_name");
+rate = rs.getInt("rate");
+table.add(b2, new Object[] {crime_name, rate});
+i++;
+}
+if (i<1) {
+JOptionPane.showMessageDialog(null, "Sorry the location you have given is not available");
+}
+else
+{
+ System.out.println(i+"Record Found");
+}
+}
+catch(Exception ea)
+{
+System.out.println(ea);
+}
+
+}
+});
+b2.setBounds(151, 72, 89, 23);
+frame.getContentPane().add(b2);
+
+table = new JTable();
+table.setModel(new DefaultTableModel(
+new Object[][] {
+{null, null},
+{null, null},
+{null, null},
+{null, null},
+{null, null},
+},
+new String[] {
+"New column", "New column"
+}
+));
+table.setBounds(10, 127, 383, 80);
+frame.getContentPane().add(table);
+}
+}
