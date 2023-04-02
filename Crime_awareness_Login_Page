@@ -1,0 +1,123 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.BorderLayout;
+import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.beans.Statement;
+import java.sql.*;
+import java.awt.event.ActionEvent;
+
+public class Login_Page {
+
+private JFrame frame;
+private JTextField t1;
+private JTextField t2;
+
+/**
+* Launch the application.
+*/
+public static void main(String[] args) {
+EventQueue.invokeLater(new Runnable() {
+public void run() {
+try {
+Login_Page window = new Login_Page();
+window.frame.setVisible(true);
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+});
+}
+
+/**
+* Create the application.
+*/
+public Login_Page() {
+initialize();
+}
+
+/**
+* Initialize the contents of the frame.
+*/
+private void initialize() {
+frame = new JFrame();
+frame.setBackground(Color.GRAY);
+frame.setBounds(100, 100, 450, 300);
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+frame.getContentPane().setLayout(null);
+
+t1 = new JTextField();
+t1.setBounds(152, 86, 182, 20);
+frame.getContentPane().add(t1);
+t1.setColumns(10);
+
+JLabel lblNewLabel = new JLabel("Login Page");
+lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+lblNewLabel.setBounds(136, 21, 134, 30);
+frame.getContentPane().add(lblNewLabel);
+
+JLabel lblNewLabel_1 = new JLabel("User Name");
+lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+lblNewLabel_1.setBounds(26, 87, 79, 14);
+frame.getContentPane().add(lblNewLabel_1);
+
+t2 = new JTextField();
+t2.setBounds(152, 136, 182, 20);
+frame.getContentPane().add(t2);
+t2.setColumns(10);
+
+JLabel lblNewLabel_2 = new JLabel("Contact Number");
+lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+lblNewLabel_2.setBounds(26, 137, 122, 14);
+frame.getContentPane().add(lblNewLabel_2);
+
+JButton b1 = new JButton("Login"+"");
+b1.addActionListener(new ActionListener() {
+public void actionPerformed(ActionEvent e)
+{
+
+ Connection con=null;
+ PreparedStatement stmt=null;
+ String sql="insert into user_login_page(User_Name,Contact_No) values(?,?)";
+ String user_name=t1.getText();
+ String contact=t2.getText();
+ 
+ {
+ try
+ 
+ {
+ 
+ Class.forName("com.mysql.cj.jdbc.Driver");
+  con=DriverManager.getConnection("jdbc:mysql://localhost:3306/crimerate","root","root");
+                     
+                  stmt =con.prepareStatement(sql);    
+                   stmt.setString(1,user_name);
+                   stmt.setString(2,contact );
+                   int k=stmt.executeUpdate();
+                   
+                            System.out.println(k);
+ 
+                           
+   JOptionPane.showMessageDialog(null,"Thank You for Login");
+
+ }
+ catch(Exception ea)
+ {
+ System.out.println(ea);
+ }
+
+ 
+ }
+}
+});
+b1.setBounds(152, 190, 89, 23);
+frame.getContentPane().add(b1);
+}
+}
